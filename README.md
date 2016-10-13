@@ -13,6 +13,9 @@ Nginx (example config file in nginx.cong.bak)
 Postgres
 Caffe (for running classification experiements, not needed for annotation server)
 
+# COCO Attributes dataset
+To download the current version of this dataset go to:
+http://cs.brown.edu/~gen/cocottributes.html
 
 # Instructions for starting the server
 sudo service nginx start
