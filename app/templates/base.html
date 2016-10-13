@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% if title %}
+      <title>{{ title }} | COCO-Attribtues</title>
+    {% else %}
+      <title>COCO-Attributes</title>
+    {% endif %}
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/colorbrewer.css') }}">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">  
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.js') }}"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <!--script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script-->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.maphilight.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.hoverIntent.minified.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/colorbrewer.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/palette.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/sticky-div.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/details.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/draw.js') }}"></script>
+
+</head>
+    <body>
+      <div id = "main">
+        <!-- <div id = "nav_bar"> -->
+        <!--   <p>COCO Attributes</p> -->
+        <!--   <div id = "links"> -->
+        <!--     <a href="{{ url_for('index') }}">Home</a> -->
+        <!--     <a href="{{ url_for('ImageView:index') }}">Images</a> -->
+        <!--     <a href="{{ url_for('AnnView:index') }}">Annotations</a> -->
+        <!--     <a href="{{ url_for('LabelView:index') }}">Labels</a> -->
+        <!--     <a href="{{ url_for('SearchView:index') }}">Search</a> -->
+        <!--     <a href="{{ url_for('StatsView:index') }}">Statistics</a> -->
+        <!--     <a href="{{ url_for('TaskView:index') }}">Tasks</a> -->
+        <!--   </div> -->
+        <!-- </div> -->
+      
+	    <div id = "content">
+		    {% with messages = get_flashed_messages() %}
+		    {% if messages %}
+		    <ul>
+		      {% for message in messages %}
+		      <li>{{ message }} </li>
+		        {% endfor %}
+		    </ul>
+		    {% endif %}
+		    {% endwith %}
+		    {% block content %}
+		    <p>Set a content block!</p>
+		    {% endblock %}
+	    </div>        
+	</div>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+          (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+          function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+          e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+          e.src='//www.google-analytics.com/analytics.js';
+          r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+          ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+      </div>
+    </body>
+</html>

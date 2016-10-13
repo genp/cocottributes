@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+  var user_input = [];
+  var cur_words = {{ cur_words | safe }};
+</script>
+
+<div id="frame">
+        <div style="float: left; margin-top: 10px; margin-left: 220px; width: 250px; font-size: 150%;">
+        <span class="item0" >Picture A</span>
+        </div>
+
+        <div style="float: left; margin-top: 10px; margin-left: 280px; width: 250px; font-size: 150%;">
+	  <span class="item1">Picture B</span>
+        </div>
+
+    {% import "_display_grid.html" as forms %}
+    {{ forms.display_grid(patches, 1, 0, 300, 1100, 0) }}
+
+
+    <hr class="blank" style="clear: both; width: 1000px">
+    <hr  style="clear: both; width: 1000px;  margin-left: 40px;">
+
+        <div style="float: left; margin-left: 100px; width: 400px">
+        <p> What is different about the <i>{{ label }} </i> in <span class="item0">Picture A</span> compared to the <i> {{ label }} </i> in <span class="item1">Picture B?</span></p>
+        <p> In each picture, the <i>{{ label }}</i> is outlined in white. <br> Please provide at least three new descriptive words. </p>
+        </div>
+
+        <div id="cur_words"  style="float: left; margin: 20px;">
+          Words other people thought of:
+
+        </div>
+        <div style="float: left; margin: 20px;" id="input-area">
+          New descriptive words: <br>
+          <input class="text" value="" /> <br>
+          <input class="text" value="" /> <br>
+          <input class="text" value="" /> <br>
+          <input class="text" value="" /> <br>
+          <input class="text" value="" /> <br>
+
+	  <form id="mturk" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">
+	  <!--"https://www.mturk.com/mturk/externalSubmit"-->
+              <button style = "font-weight:normal;" type = "button" id = "commit" class="styled-button-10" >Submit New Words</button>
+	  </form>
+          <form method="post" id="submit_diff" enctype="multipart/form-data">
+              {{form.hidden_tag()}}
+
+
+          </form>
+        </div>
+
+	
+
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/loadPage.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/diff.js') }}"></script>
+
+{% endblock %}

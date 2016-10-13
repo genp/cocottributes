@@ -1,0 +1,22 @@
+{% macro display_ann(anns, patches, outlineOnly) %}
+
+<canvas id="myCanvas" width="1000" height="1000"></canvas>
+<script type="text/javascript" src="{{ url_for('static', filename='js/draw.js') }}"></script>
+<script>
+console.log('starting to print patches');
+// {{patches}}
+var patches = [
+{% for p in patches %}
+  {{p.segmentation}},
+{% endfor %}
+];
+
+
+var img_id = "{{ anns[0].image_id|safe }}";
+console.log(img_id);
+canvas_annotation('myCanvas', patches, img_id, {{ outlineOnly }}, 1000, 0)
+</script>
+
+
+
+{% endmacro %}

@@ -1,0 +1,78 @@
+{% macro display_attr_checkboxes(attributes, patches) %}
+
+<script>
+
+var label_ids = [
+{% for attr in attributes %}
+  {{attr.id}},
+{% endfor %}
+];
+
+
+var options = [
+{% for attr in attributes %}
+  "{{attr.name}}",
+{% endfor %}
+];
+
+var attr_defns = [
+{% for attr in attributes %}
+  "{{attr.defn|safe}}",
+{% endfor %}
+];
+
+var num_boxes = {{ patches|length }};
+var dname = 'checkbox_grid';
+make_checkbox_grid(options, num_boxes);
+</script>
+
+
+
+{% endmacro %}
+
+{% macro display_tf_checkboxes(attribute, patches) %}
+
+<script>
+var label_ids = [{{attribute.id}}];
+var options = ["{{attribute.name}}", "not {{attribute.name}}"];
+var num_boxes = {{ patches|length }};
+add_checkboxes(options, num_boxes);
+</script>
+
+
+
+{% endmacro %}
+
+
+{% macro load_answers(answers, alt_answers) %}
+
+<script>
+
+var ans = new Object();
+var alt_ans = new Object();
+var num_pos = 0;
+var num_neg = 0;
+{% for key, value in answers.iteritems() %}
+    ans["{{ key }}"] = new Object();
+    {% for id, val in value.iteritems() %}
+        ans["{{ key }}"]["{{ id }}"] = {{ val }};
+        if ({{ val }}) {
+            num_pos += 1;
+        } else {
+            num_neg += 1;
+        }
+    {% endfor %}
+{% endfor %}
+
+{% for key, value in alt_answers.iteritems() %}
+    alt_ans["{{ key }}"] = new Object();
+    {% for id, val in value.iteritems() %}
+        alt_ans["{{ key }}"]["{{ id }}"] = {{ val }};
+    {% endfor %}
+{% endfor %}
+
+</script>
+
+
+
+{% endmacro %}

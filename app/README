@@ -1,0 +1,6 @@
+
+# During setup, change these files to enable remote connections to postgres server and restart postgresql
+# pg_hba.conf -- add lines
+host    all             all             <remote host>         md5
+#postgresql.conf
+listen_addresses = '*'

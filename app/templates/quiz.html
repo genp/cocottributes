@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+    var label = '{{ label }}';
+    var use_outline = {{ use_outline | safe }};
+    var task_type = '{{ label_heading }}';
+    if (task_type == 'Attributes') {
+        task_type = 'Attribute';
+    }
+    if (task_type == 'Categories') {
+        task_type = 'Category';
+    }
+</script>
+<div class="superdiv">
+        <div style="float: left; margin-left: 100px; width: 400px">
+	<h1> Quiz Instructions </h1>
+        <p> Examine the <i>{{ label }} </i> in each <span class="item0">image</span>. Click on all of the descriptive <span class="item1">{{ label_heading|lower }}</span> that apply to the <i>{{ label }}</i> in the <span class="item0">image</span>. </p>
+
+	{% if use_outline == 1 %}
+
+        <p id="objInstr"> In each picture, the <i>{{ label }}</i> is outlined in white. If you hover your cursor over the image, the outline will disappear.</p>
+	
+	{% else %}
+
+	{% if label_heading == "Attributes" %}
+        <p id="objInstr"> Please consider the whole <span class="item0">image</span> when deciding if an <span item="item1">attribute</span> applies.
+	For example, 'natural light' should apply to the lighting for the whole scene, but 'bricks' would be true if anything is made of bricks in the picture.</p>
+	
+	{% else %}
+        <p id="objInstr"> Please consider the whole <span class="item0">image</span> when deciding if a <span item="item1">category</span> label applies.
+	More than one category label may apply to an image, but generally pick the category that seems the most obvious. For example, an image could be both 'beach' and 'ocean'.</p>
+
+	{% endif %}
+
+	{% endif %}
+
+
+	<p> If none of the <span class="item1">{{ label_heading|lower }}</span> apply, check <b>None</b>.</p>
+        </div>
+
+        <div style="float: right; margin-top: 60px; width: 400px">
+	  <p> Many of these <span class="item1">{{ label_heading|lower }}</span> are subjective. This quiz is checking for the most obvious <span class="item1">{{ label_heading|lower }} </span>. If you select more <span class="item1">{{ label_heading|lower }}</span> than the ones expected by this quiz, great job! This quiz is only checking that you can identify the basic <span class="item1">{{ label_heading|lower }}</span> present in the <span class="item0">images</span>.</p>
+	</div>
+
+    <hr class="blank" style="clear: both; width: 1000px">
+    <hr  style="clear: both; width: 1000px;  margin-left: 40px;">
+
+<div id="frame">
+        <div style="float: left; margin-top: 10px; margin-left: 220px; margin-bottom: 20px; width: 250px; font-size: 150%;">
+        <span class="item0" >{{ label_title }}</span> 
+        </div>
+
+        <div style="float: left; margin-top: 10px; margin-left: 280px; margin-bottom: 20px; width: 250px; font-size: 150%;">
+	  <span class="item1">{{ label_heading }}</span>
+        </div>
+
+    {% import "_display_grid.html" as forms %}
+    {{ forms.display_grid(patches, use_outline, 0, 500, 500, 0) }}
+    {% import "_display_attr_checkboxes.html" as forms2 %}
+    {{ forms2.display_attr_checkboxes(attributes, patches) }}
+    {{ forms2.load_answers(answers, alt_answers) }}
+
+	<div style="width: 1100px;float:left;" id="input-area" >
+	  <form id="mturk" method="POST" action="https://www.mturk.com/mturk/externalSubmit"><!--action="https://workersandbox.mturk.com/mturk/externalSubmit"-->
+              <button style = "font-weight:normal;float:right; margin-right:500px; margin-bottom: 20px;" type = "button" class="styled-button-10" id = "commit" >Submit</button>	    
+	  </form>
+          <form method="post" id="submit" enctype="multipart/form-data">
+              {{form.hidden_tag()}}
+
+
+          </form>
+        </div>
+
+	
+
+</div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/loadPage.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/task.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

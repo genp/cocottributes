@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Annotations for Image {{anns[0].image.id}} </p>
+<div id="img_grid" style="float:left;width:{{ grid_width }}px"> </div>
+
+{% import "_display_ann.html" as forms %}
+{{ forms.display_ann(anns, patches, 1) }}
+
+{% endblock %}
+
+
+
+
+

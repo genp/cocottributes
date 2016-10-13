@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+    var label = '{{ label }}';
+    var use_outline = {{ use_outline | safe }};
+    var options = ['True', 'False']
+</script>
+<div class="superdiv">
+        <div style="float: left; margin-left: 100px; width: 400px" class="instructions">
+	<h1> Instructions </h1>
+	  <p>
+	    <h3>Look for <span style="" class="item0" >{{ label_title }} </span> that are described by <span class="item1">{{ attribute.name }}</span>:</h3>
+	{{ attribute.defn|safe }}
+	</p>
+        <p> Examine the outlined <i>{{ label }} </i> in each image. Click on all of the images that the label <span class="item1">{{ attribute.name }}</span> applies to. </p>
+
+	{% if use_outline == 1 %}
+
+        <p id="objInstr"> In each picture, the <i>{{ label }}</i> is outlined in white. If you hover your cursor over the image, the outline will disappear.</p>
+	<p> If it is not possible to tell if <i>{{ attribute.name }}</i> applies to the <i>{{ label }} </i> in an image, for example in the <i>{{ label }} </i> is occluded or not completely shown in the image, please select "not <i>{{ attribute.name }}</i>"</p>
+	<!-- <h3> An example of how to select correct images: </h3> -->
+	<!-- <img src="/static/imgs/img_click_instructions.png"> -->
+	{% else %}
+
+	{% if label_heading == "Attributes" %}
+        <p id="objInstr"> Please consider the whole <span class="item0">image</span> when deciding if an <span item="item1">attribute</span> applies.
+	For example, 'natural light' should apply to the lighting for the whole scene, but 'bricks' would be true if anything of a good size is made of bricks in the picture.</p>
+	
+	{% else %}
+        <p id="objInstr"> Please consider the whole <span class="item0">image</span> when deciding if a <span item="item1">category</span> label applies. For example, if only the head and shoulders of a person is outlined, but that person is sitting down, the label 'sitting' applies. If it is not possible to tell if the attribute applies, for example if a person or animal is too blurry to determine if it is a child or a male or female, please mark the attribute as not present.</p>
+
+	{% endif %}
+
+	{% endif %}
+
+        </div>
+
+        <div style="float: right; margin-top: 60px; width: 400px" class="instructions">
+	  <p>In order to receive a Qualification for this type of HIT, please complete an Object or Image {{ label_heading }} Annotation Qualification Quiz HIT. If you pass the quiz, you will be granted the qualification. </p>
+	  <p>These images may rarely contain offensive content. We try not to let offensive content in, but it may happen accidentally.</p>
+
+	  <p><b>Note:</b> We are looking for your first impression answer. These HITs are graded on how much effort you demonstrate and if you agree regularly with other annotators. Bonuses are regularly awarded. </p>
+
+	</div>
+
+
+
+    <hr class="blank" style="clear: both; width: 1000px">
+    <hr  style="clear: both; width: 1000px;  margin-left: 40px;">
+
+<div id="frame">
+        <div style="text-align: center; float: left; margin-top: 10px;  margin-bottom: 20px; margin-left: 20px; width: 1000px; font-size: 150%;">
+        <span style="" class="item0" >{{ label_title }} </span> -- <span style="" class="item1" >{{ attribute.name }} </span> 
+        </div>
+
+    {% import "_display_grid.html" as forms %}
+    {{ forms.display_grid(patches, use_outline, 1, 500, 1040, 1) }}
+    {% import "_display_attr_checkboxes.html" as forms2 %}
+    {{ forms2.display_tf_checkboxes(attribute, patches) }}
+
+
+	<div style="width: 1100px;float:left;" id="input-area" >
+	  <form id="mturk" method="POST" action="https://www.mturk.com/mturk/externalSubmit">
+	  <!--"https://www.mturk.com/mturk/externalSubmit"-->
+              <button style = "font-weight:normal;float:right; margin-right:500px; margin-bottom: 20px;" type = "button" class="styled-button-10" id = "commit" >Submit</button>	    
+	  </form>
+          <form method="post" id="submit" enctype="multipart/form-data">
+              {{form.hidden_tag()}}
+
+
+          </form>
+        </div>
+
+	
+
+</div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/loadPage.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/task.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/annotate.js') }}"></script>
+<script>
+  var is_replay = '{{ is_replay }}';
+
+  if ( is_replay ) {
+      $('#input-area').remove();
+      // $('.instructions').remove();
+      replay_annotations({{ annotations | safe }});
+  }
+</script>
+{% endblock %}

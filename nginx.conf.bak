@@ -1,0 +1,86 @@
+worker_processes 1;
+
+events {
+
+    worker_connections 1024;
+
+}
+
+http {
+
+    sendfile on;
+
+    gzip              on;
+    gzip_http_version 1.0;
+    gzip_proxied      any;
+    gzip_min_length   500;
+    gzip_disable      "MSIE [1-6]\.";
+    gzip_types        text/plain text/xml text/css
+                      text/comma-separated-values
+                      text/javascript
+                      application/x-javascript
+                      application/atom+xml;
+
+
+    fastcgi_buffers 8 16k;	
+    fastcgi_buffer_size 32k;
+
+    # Configuration containing list of application servers
+    upstream uwsgicluster {
+
+        server 127.0.0.1:8081;
+        # server 127.0.0.1:8081;
+        # ..
+        # .
+
+    }
+
+    # Configuration for Nginx
+    server {
+
+        # Running port
+        listen 80;
+	listen 443 default_server ssl;
+	server_name cocottributes.org;
+	ssl_certificate     /root/coco_attributes/cocottributes.crt;	
+    	ssl_certificate_key /root/coco_attributes/cocottributes.key;
+	access_log /root/coco_attributes/access.log;
+	error_log /root/coco_attributes/error.log;
+
+        # Settings to by-pass for static files 
+        location ^~ /static/  {
+
+            # Example:
+            # root /full/path/to/application/static/file/dir;
+            root /root/coco_attributes/app/;
+	    include	       /etc/nginx/mime.types;
+
+        }
+
+        # Serve a static file (ex. favico) outside static dir.
+        location = /favico.ico  {
+
+            root /root/coco_attributes/app;
+
+        }
+
+        # Proxying connections to application servers
+        location / {
+
+            include            uwsgi_params;
+            uwsgi_pass         uwsgicluster;
+	    include 	       /etc/nginx/mime.types;
+
+            proxy_redirect     off;
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Host $server_name;
+
+        }
+
+    }
+
+
+ 
+}

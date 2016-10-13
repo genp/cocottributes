@@ -1,0 +1,31 @@
+{% macro display_grid(patches, outlineOnly, clickable, width, grid_width, crop) %}
+
+<div id="img_grid" style="float:left;margin-left:20px;width:{{ grid_width }}px"> </div>
+
+<script>
+// {{patches}}
+var patches = [
+{% for p in patches %}
+  {{p.segmentation}},
+{% endfor %}
+];
+
+var patch_ids = [
+{% for p in patches %}
+  {{p.id}},
+{% endfor %}
+];
+
+var imgs = [
+{% for p in patches %}
+  {{p.image_id}},
+{% endfor %}
+];
+var dname = 'img_grid';
+
+make_grid(dname, patches, imgs, {{ outlineOnly }}, {{ clickable }}, {{width}}, {{crop}});
+</script>
+
+
+
+{% endmacro %}
