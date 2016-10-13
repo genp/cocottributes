@@ -1,11 +1,24 @@
 # cocottributes
 Code use to create COCO Attributes dataset and experiments in the associate ECCV 2016 paper. 
 
-# instructions for starting the server
+Before using this repository, create a config.py in the top-level
+directory. Use config_example.py as a guide.
+
+# Requirements:
+Python requirements are listed in requirements.txt. To install use:
+> pip install -r requirements.txt
+
+# Additional requirements include:
+Nginx (example config file in nginx.cong.bak)
+Postgres
+Caffe (for running classification experiements, not needed for annotation server)
+
+
+# Instructions for starting the server
 sudo service nginx start
 uwsgi --socket 127.0.0.1:8081 -w wsgi:app
 
-# instructions for starting mturk hits
+# Instructions for starting mturk hits
 
 manage_hits.py
     '''
@@ -21,7 +34,7 @@ ela_hits.py
     '''
     this is the number of questions permitted in the ELA
     '''
-    NUMQ = 40
+    NUMQ = 40 (set this variable in config.py for max number of attributes to annotate per object)
     '''
     func for adding (patch, attribute) question to Query table, check if enough queries to launch new hit
     for relaunching hits that already have labels
