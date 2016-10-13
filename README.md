@@ -1,4 +1,4 @@
-# cocottributes
+# COCO Attributes annotation server and attribute classification code
 Code use to create COCO Attributes dataset and experiments in the associate ECCV 2016 paper. 
 
 Before using this repository, create a config.py in the top-level
