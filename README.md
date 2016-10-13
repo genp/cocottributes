@@ -1,4 +1,5 @@
-# coco_attributes
+# cocottributes
+Code use to create COCO Attributes dataset and experiments in the associate ECCV 2016 paper. 
 
 # instructions for starting the server
 sudo service nginx start
