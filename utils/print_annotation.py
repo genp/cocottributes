@@ -53,7 +53,7 @@ def print_coco_attributes_instance(cocottributes, coco_data, ex_ind, sname):
 data_types = ['val2014', 'train2014']
 coco_data = {}
 # Change this to location where COCO dataset lives
-coco_dataset_dir = '/Users/gen/coco/'
+coco_dataset_dir = '~/coco/'
 for dt in data_types:
     annFile=os.path.join(coco_dataset_dir, 'instances_%s.json'%(dt))
 
@@ -66,7 +66,7 @@ for dt in data_types:
             coco_data['annotations'] += tmp['annotations']
 
 # Load COCO Attributes 
-cocottributes = joblib.load('/Users/gen/Downloads/cocottributes_eccv_version.jbl')
+cocottributes = joblib.load('cocottributes_eccv_version.jbl')
 
 # Index of example instance to print
 ex_inds = [0,10,50,100,500,1000,5000,10000]
