@@ -14,6 +14,8 @@ from app import db
 from app.models import *
 import config
 import jfif
+import tqdm
+from sklearn.externals import joblib
 
 '''
 
@@ -217,3 +219,134 @@ def add_imgs(img_files, symlink_prefix, url_prefix, step):
 def email_notify(message, subject, to_addr):
     output = subprocess.check_output("echo '%s' | mail -s '%s' %s" % (message, subject, to_addr), shell=True)
     return output
+
+
+def convert(train_annotations, val_annotations, attributes):
+    """
+    Convert the original dataset format to an easier one, aka my implementation as specified in DATA.md.
+    :param train_annotations: The training annotations dataset from MS COCO which gives us the object bounding boxes and categories.
+    :param val_annotations: The validation annotations dataset from MS COCO which gives us the object bounding boxes and categories.
+    :param attributes: The MS COCO attributes dataset.
+    :return: True if conversion is successful.
+    """
+    new_scheme = dict()
+    new_scheme['ann_attrs'] = {}
+
+    # Create a copy of the attributes
+    attrs = list(attributes['attributes'])
+    # Sort the keys on their IDs
+    attrs.sort(key=lambda x: x['id'])
+
+    new_scheme['attributes'] = attrs
+
+    for i, idx in enumerate(attributes['ann_vecs'].keys()):
+        print(i)
+
+        split = attributes['split'][idx]
+
+        # Get the attributes and the corresponding annotation ID
+        object_attrs = attributes['ann_vecs'][idx]
+        ann_id = attributes['patch_id_to_ann_id'][idx]
+
+        if 'train' in split:
+            annotations = train_annotations
+        elif 'val' in split:
+            annotations = val_annotations
+
+        object_annotation = [a for a in annotations if a['id'] == ann_id][0]
+
+        try:
+            new_scheme['ann_attrs'][object_annotation['id']] = {'attrs_vector': object_attrs, 'split': split}
+        except (Exception,):
+            print("Error for idx={}".format(idx))
+            pass
+
+    joblib.dump(new_scheme, '../../MSCOCO/cocottributes_new_version.jbl')
+
+
+def get_image_crop(img, x, y, width, height, crop_size=224, padding=16):
+    """
+    Get the image crop for the object specified in the COCO annotations.
+    We crop in such a way that in the final resized image, there is `padding` amount of image data around the object.
+    This is the same as is used in RCNN to allow for additional image context.
+    :param img: The image ndarray
+    :param x: The x coordinate for the start of the bounding box
+    :param y: The y coordinate for the start of the bounding box
+    :param width: The width of the bounding box
+    :param height: The height of the bounding box
+    :param crop_size: The final size of the cropped image. Needed to calculate the amount of context padding.
+    :param padding: The amount of context padding needed in the image.
+    :return:
+    """
+    # Scale used to compute the new bbox for the image such that there is surrounding context.
+    # The way it works is that we find what is the scaling factor between the crop and the crop without the padding
+    # (which would be the original tight bounding box).
+    # `crop_size` is the size of the crop with context padding.
+    # The denominator is the size of the crop if we applied the same transform with the original tight bounding box.
+    scale = crop_size / (crop_size - padding * 2)
+
+    # Calculate semi-width and semi-height
+    semi_width = width / 2
+    semi_height = height / 2
+
+    # Calculate the center of the crop
+    centerx = x + semi_width
+    centery = y + semi_height
+
+    # We get the crop using the semi- height and width from the center of the crop.
+    # The semi- height and width are scaled accordingly.
+    # We also ensure the numbers are not negative (Python3 sets the dimension to 0 otherwise which results in an error)
+    lowy = int(max(0, round(centery - (semi_height * scale))))
+    highy = int(max(0, round(centery + (semi_height * scale))))
+    lowx = int(max(0, round(centerx - (semi_width * scale))))
+    highx = int(max(0, round(centerx + (semi_width * scale))))
+
+    crop_img = img[lowy:highy, lowx:highx]
+    return crop_img
+
+
+def get_images_list(annotations, attributes, data_root=".", split="train"):
+    """
+    Helper function to retrieve a list of JSON objects for each image in the dataset
+    with all the relevant data which is:
+    1. Image path (path).
+    2. Split to which the image belongs to (split).
+    3. The bounding box for the object if applicable (bbox).
+    4. COCO Attributes vector (attrs_vector).
+    5. The ID of the annotation in the COCO dataset (id).
+    :param annotations: The COCO Annotations dataset.
+    :param attributes: The COCO Attributes dataset.
+    :param data_root: The path to the directory where the datasets are located on the drive.
+    :param split: The data split (train, val, test, etc.) to which the image belongs to.
+    :return: A list of JSON objects for each image with all the data specified prior.
+    """
+    # The final list to be returned
+    images_list = []
+
+    # A list of all the images in the split so as to iterate over
+    split_img_list = []
+    for idx in attributes['ann_attrs'].keys():
+        d = attributes['ann_attrs'][idx]
+        if split in d['split']:
+            d['id'] = idx
+            split_img_list.append(d)
+
+    for i, ann in tqdm(enumerate(split_img_list), total=len(split_img_list)):
+            # We use the ann id to find the annotation in the annotations dataset.
+            # Since ID is unique, there should always be only one.
+            object_annotation = [a for a in annotations if a['id'] == ann['id']][0]
+
+            # Get the image ID and the bounding box for the object
+            img_id = object_annotation['image_id']
+
+            ann['path'] = osp.join(data_root,
+                                   "{0}2014".format(split),
+                                   "COCO_{0}2014_{1:012d}.jpg".format(split, img_id))
+            ann['bbox'] = object_annotation['bbox']
+
+            # Get the object attributes as an array of 1s and 0s.
+            ann['attrs_vector'] = np.array([np.float(x > 0) for x in ann['attrs_vector']])
+
+            images_list.append(ann)
+
+    return images_list
