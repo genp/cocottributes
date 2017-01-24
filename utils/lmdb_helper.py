@@ -40,14 +40,20 @@ def create_image_lmdb(image_data, split="train", shape=(3, 224, 224), data_root=
 
             img = scp.ndimage.imread(ann["path"])
 
-            # Crop out the object with context padding.
+            # If not triple channel image, make it triple channeled
+            if len(img.shape) <= 2:
+                img = np.dstack((img, img, img))
+
+                # Crop out the object with context padding.
             x, y, width, height = ann["bbox"]
             crop_im = utils.get_image_crop(img, x, y, width, height, crop_size)
 
             # Resize it to the desired shape.
             im = scp.misc.imresize(crop_im, (crop_size, crop_size, 3))  # resize
 
+            # Convert image from RGB to BGR
             im = im[:, :, ::-1]
+            # Convert to CxHxW
             im = im.transpose((2, 0, 1))
 
             im_data = caffe.io.array_to_datum(im)

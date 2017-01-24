@@ -62,7 +62,7 @@ def create_dataset(image_data, filename="train.hdf5",
                     raise Exception("Invalid image path")
 
                 # If single channel image, make it triple channeled
-                if len(img.shape) == 2:
+                if len(img.shape) <= 2:
                     img = np.dstack((img, img, img))
 
                 # Crop out the object whose attributes we have.
