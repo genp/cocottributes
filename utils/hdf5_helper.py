@@ -66,12 +66,11 @@ def create_dataset(image_data, filename="train.hdf5",
                     img = np.dstack((img, img, img))
 
                 # Crop out the object whose attributes we have.
-                # First we convert the coords to integers
                 x, y, width, height = bbox
 
                 # Now we crop out the object image
                 # crop_img = img[y:y + height, x:x + width] - This is the original way to crop
-                crop_img = common.get_image_crop(img, x, y, width, height, crop_size)
+                crop_img = utils.get_image_crop(img, x, y, width, height, crop_size)
 
                 # Resize it to the desired shape.
                 img = scp.misc.imresize(crop_img, (crop_size, crop_size, 3))

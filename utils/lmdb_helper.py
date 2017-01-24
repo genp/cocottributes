@@ -9,7 +9,7 @@ import os
 import numpy as np
 import scipy as scp
 from scipy import misc, ndimage
-import common
+import utils
 from tqdm import tqdm
 
 
@@ -42,7 +42,7 @@ def create_image_lmdb(image_data, split="train", shape=(3, 224, 224), data_root=
 
             # Crop out the object with context padding.
             x, y, width, height = ann["bbox"]
-            crop_im = common.get_image_crop(img, x, y, width, height, crop_size)
+            crop_im = utils.get_image_crop(img, x, y, width, height, crop_size)
 
             # Resize it to the desired shape.
             im = scp.misc.imresize(crop_im, (crop_size, crop_size, 3))  # resize
@@ -146,6 +146,6 @@ if __name__ == "__main__":
 
     print("Getting the formatted image list")
     root = "../../../MSCOCO"
-    im_data_list = common.get_images_list(val_ann['annotations'], attr_data, data_root=root, split="val")
+    im_data_list = utils.get_images_list(val_ann['annotations'], attr_data, data_root=root, split="val")
     # create_label_lmdb(im_data_list, split='sample', data_root=root)
     create_image_lmdb(im_data_list, split="sample", data_root=root)
