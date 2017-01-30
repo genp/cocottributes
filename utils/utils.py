@@ -261,7 +261,7 @@ def convert(train_annotations, val_annotations, attributes):
             print("Error for idx={}".format(idx))
             pass
 
-    joblib.dump(new_scheme, '../../MSCOCO/cocottributes_new_version.jbl')
+    joblib.dump(new_scheme, '../../MSCOCO/cocottributes_new_version.jbl', compress=3)
 
 
 def get_image_crop(img, x, y, width, height, crop_size=224, padding=16):
