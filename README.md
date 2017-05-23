@@ -1,5 +1,5 @@
 # COCO Attributes annotation server and attribute classification code
-Code use to create COCO Attributes dataset and experiments in the associate ECCV 2016 paper. 
+Code use to create COCO Attributes dataset and experiments in the associated ECCV 2016 paper. 
 
 Before using this repository, create a config.py in the top-level
 directory. Use config_example.py as a guide.
@@ -9,9 +9,9 @@ Python requirements are listed in requirements.txt. To install use:
 > pip install -r requirements.txt
 
 # Additional requirements include:
-Nginx (example config file in nginx.cong.bak)
-Postgres
-Caffe (for running classification experiements, not needed for annotation server)
+* Nginx (example config file in nginx.conf.bak)
+* Postgres
+* Caffe (for running classification experiements, not needed for annotation server)
 
 # COCO Attributes dataset
 To download the current version of this dataset go to:

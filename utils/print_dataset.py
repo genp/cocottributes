@@ -29,7 +29,7 @@ def metadata(data):
 
     data['info'] = {'contributor': 'MS COCO Attributes group',
                     'date_created': str(datetime.datetime.now()),
-                    'description': 'This is an intermediate version of the 2016 MS COCO Attributes dataset.',
+                    'description': '2016 MS COCO Attributes dataset',
                     'url': 'http://cocottributes.org',
                     'version': '0.5',
                     'year': 2016}
@@ -110,8 +110,8 @@ def get_votes(parent_lbl):
         try:
             ann_vecs[ann[0]][attrs_ordered.index(ann[1])] = ann[2]
         except KeyError, e:
-            ann_vecs[ann[0]] = np.zeros(len(attrs_ordered))
-            ann_vecs[ann[0]][attrs_ordered.index(ann[1])] = ann[2] if ann[3] > 0 else -1
+            ann_vecs[ann[0]] = -1*np.ones(len(attrs_ordered))
+            ann_vecs[ann[0]][attrs_ordered.index(ann[1])] = ann[2] if ann[3] > -0.01 else -1
 
     
 
