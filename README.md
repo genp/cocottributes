@@ -15,7 +15,7 @@ Python requirements are listed in requirements.txt. To install use:
 
 # COCO Attributes dataset
 To download the current version of this dataset go to:
-http://cs.brown.edu/~gen/cocottributes.html
+http://cs.brown.edu/~gmpatter/cocottributes.html
 
 # Instructions for starting the server
 sudo service nginx start
