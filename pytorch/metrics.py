@@ -35,8 +35,8 @@ def precision_recall(truth, scores):
     tp = (truth == 1)[sort_inds]
     fp = (truth == -1)[sort_inds]
 
-    tp = np.cumsum(tp)
-    fp = np.cumsum(fp)
+    tp = np.cumsum(tp.astype(np.float))
+    fp = np.cumsum(fp.astype(np.float))
 
     npos = (truth == 1).sum()
 

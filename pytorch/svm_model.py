@@ -15,7 +15,9 @@ def reduce(feat, output_dim=200, alpha=2.5):
         raise ValueError('output_dim is larger than the codes! ')
 
     # apply power norm
-    pownorm = lambda x: np.power(np.abs(x), alpha)
+    def pownorm(x):
+        return np.power(np.abs(x), alpha)
+
     pw = pownorm(feat)
     norm = np.linalg.norm(pw, axis=1)
 
@@ -34,7 +36,8 @@ class FeatureExtractor(nn.Module):
         super().__init__()
 
         self.model = models.alexnet(pretrained=True)
-        new_classifier = nn.Sequential(*list(self.model.classifier.children())[:-1])
+        new_classifier = nn.Sequential(
+            *list(self.model.classifier.children())[:-1])
         self.model.classifier = new_classifier
 
         self.output_dim = 200
@@ -42,10 +45,11 @@ class FeatureExtractor(nn.Module):
 
     def forward(self, x):
         fc7 = self.model(x)
-        feat = reduce(fc7, self.output_dim, self.alpha)
+        feat = reduce(fc7.cpu().numpy(), self.output_dim, self.alpha)
 
         # returns numpy array
         return feat
+
 
 class SVM:
     def __init__(self):

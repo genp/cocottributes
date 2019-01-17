@@ -21,7 +21,7 @@ logger = logging.getLogger("attributes")
 def get_features(feat_extractor, data_loader, n_attrs=204, split="train"):
     feat_extractor = feat_extractor.eval()
 
-    svm_feats_file = os.path.join("svm", "svm_features_{0}.jbl".format(split))
+    svm_feats_file = os.path.join("svm_features_{0}.jbl".format(split))
 
     if os.path.exists(svm_feats_file):
         [feats, targets] = joblib.load(svm_feats_file)
@@ -31,7 +31,7 @@ def get_features(feat_extractor, data_loader, n_attrs=204, split="train"):
             targets = np.empty((0, n_attrs))
 
             for i, (x, target) in tqdm(enumerate(data_loader), total=len(data_loader)):
-                feat = feat_extractor(x)
+                feat = feat_extractor(x.cuda())
                 feats = np.vstack((feats, feat))
                 targets = np.vstack((targets, target.numpy()))
 
@@ -43,7 +43,7 @@ def get_features(feat_extractor, data_loader, n_attrs=204, split="train"):
 def main():
     args = arguments.parse()
 
-    feat_extractor = FeatureExtractor()
+    feat_extractor = FeatureExtractor().cuda()
     svms = [SVM() for _ in range(args.n_attrs)]
 
     # Dataloader code
@@ -82,8 +82,8 @@ def main():
 
     logger.info("Beginning training...")
 
-    feats, targets = get_features(
-        feat_extractor, train_loader, n_attrs=args.n_attrs, split='train')
+    feats, targets = get_features(feat_extractor, train_loader,
+                                  n_attrs=args.n_attrs, split='train')
 
     if args.checkpoint:
         [svms, _] = joblib.load(args.checkpoint)

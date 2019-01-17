@@ -45,6 +45,7 @@ class COCOAttributes(dataset.Dataset):
         patch_id = self.data[index]
 
         attrs = self.attributes_dataset['ann_vecs'][patch_id]
+        attrs = (attrs > 0).astype(np.float)
 
         ann_id = self.attributes_dataset['patch_id_to_ann_id'][patch_id]
         # coco.loadImgs returns a list
