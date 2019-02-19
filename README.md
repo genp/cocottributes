@@ -1,7 +1,8 @@
 # Update Feb 2019: 
 New pytorch models! Significant improvement over 2016 baseline network. See updates in pytorch dir. 
 
-# COCO Attributes annotation server and attribute classification code
+# COCO Attributes 
+## annotation server and attribute classification code
 Code used to create COCO Attributes dataset and experiments in the associated ECCV 2016 paper. 
 
 Before using this repository, create a config.py in the top-level
