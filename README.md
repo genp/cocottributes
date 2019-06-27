@@ -18,7 +18,9 @@ Python requirements are listed in requirements.txt. To install use:
 * Caffe (for running classification experiements, not needed for annotation server)
 
 # COCO Attributes dataset
-To download the current version of this dataset go to:
+The current version of this dataset (pickled for Python 3) is located at `./data/cocottributes_eccv_version.pkl`, synced with [git lfs](https://git-lfs.github.com/)
+
+To download the current version of this dataset (for Python 2) go to:
 http://cs.brown.edu/~gmpatter/cocottributes.html
 
 # Instructions for starting the server
