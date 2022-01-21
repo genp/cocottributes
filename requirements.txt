@@ -12,7 +12,7 @@ Flask-WTF==0.11
 freetype-py==1.0.2
 funcsigs==0.4
 inflect==0.2.5
-ipython==3.2.0
+ipython==7.16.3
 itsdangerous==0.24
 Jinja2==2.7.3
 jmespath==0.9.0
